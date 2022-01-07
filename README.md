@@ -29,7 +29,7 @@ primary key(id));
 ```
 ![image](https://github.com/DDPlay123/IoT_Python_Server/blob/main/public/images/Dataset.png)
 ### 設定Google Map API金鑰
-位置在view/web/map.ejs
+位置在views/web/map.ejs
 ![image](https://github.com/DDPlay123/IoT_Python_Server/blob/main/public/images/key.png)
 ### 執行Server
 ```
