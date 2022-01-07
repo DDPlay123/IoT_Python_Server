@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="utf-8">
+		<title><%= title %></title>
+		<link rel="icon" href="../images/yuntech.ico" type="image/x-icon" />
+		<style>
+			html, body {
+				height: 100%;
+				margin: 0;
+				padding: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<div>
+			<a href="/"><h1>Home</a> |
+			<a href="/web/list">List</a> |
+			<a href="/web/add">Add</a> |
+			<a href="/web/map">Track</a>
+		</div>
+		<div>
+			<h1><%= title %></h1>
+			<form method="post" action="/web/delete" style="float:left">
+				<input type="submit" name="delete" value='ALL Delete' />
+				<input type="hidden" name="_method" value="DELETE" />
+			</form>
+		</div>
+		
+		<!-- 錯誤訊息 -->
+		<% if (messages.error) { %>
+		<p style="color:red"><%- messages.error %></p>
+		<% } %>
+		<!-- 正確訊息 -->
+		<% if (messages.success) { %>
+		<p style="color:green"><%- messages.success %></p>
+		<% } %>
+
+		<table width='100%' border=0>
+			<tr style='text-align:left; background-color:#CCC'>
+				<th>longitude</th>
+				<th>latitude</th>
+				<th>temperature</th>
+				<th>humidity</th>
+				<th>Action</th>
+			</tr>
+	
+		<% if (data) { %>
+			<% data.forEach(function(user){ %>
+				<tr>
+					<td><%= user.longitude %></td>
+					<td><%= user.latitude %></td>
+					<td><%= user.temp %></td>
+					<td><%= user.humid %></td>
+					<td>
+						<div style="float:left">
+							<form method="post" action="/web/delete/<%= user.id %>" style="float:right">
+								<input type="submit" name="delete" value='Delete' />
+								<input type="hidden" name="_method" value="DELETE" />
+							</form>
+						</div>
+					</td>
+				</tr>
+			<% }) %>
+		<% } %>
+	</table>
+
+	</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <title>Google Map</title>
+	<link rel="icon" href="../images/yuntech.ico" type="image/x-icon">
+    <style>
+		#map {
+			height: 100%;
+		}
+		html, body {
+			height: 100%;
+			margin: 0;
+			padding: 0;
+		}
+	</style>
+  </head>
+  <body>
+    <div>
+        <a href="/"><h1>Home</a> |
+		<a href="/web/list">List</a> |
+		<a href="/web/add">Add</a> |
+		<a href="/web/map">Track</a>
+		<div>
+			<h7>溫度：<span id="temperature"></span>°C<h7>
+			<h7>濕度：<span id="humidity"></span>%<h7>
+		</div>
+    </div>
+	<script>
+		<% if (data) { %>
+			<% data.forEach(function(user){ %>
+				var temperature = <%= user.temp %>
+				var humidity = <%= user.humid %>
+				document.getElementById('temperature').textContent = temperature;
+				document.getElementById('humidity').textContent = humidity;
+			<% }) %>
+		<% } %>
+	</script>
+	<div id="map"></div>
+	<script>
+		var map;
+		var polyline = [];
+		var temp = [];
+		var symbol = {
+			path: 'M-44.6,22.3L0-22.3l44.6,44.6H-44.6z',
+			fillColor: '#292',
+			fillOpacity: 0.7,
+			strokeOpacity: 0,
+			scale:0.2
+		};
+		var font_symbol = {
+			path: "M -2,0 0,-2 2,0 0,2 z",
+			strokeColor: "#292",
+			fillColor: "#292",
+			fillOpacity: 1,
+		}
+		var end_symbol = {
+			path: "M -2,-2 2,2 M 2,-2 -2,2",
+			strokeColor: "#292",
+			strokeWeight: 4,
+		}
+		<%if (data) { %>
+			let j = 0;
+			<% data.forEach(function(user){ %>
+				var temperature = <%= user.temp %>
+				var humidity = <%= user.humid %>
+				var position = {lat:<%= user.latitude%>, lng:<%= user.longitude%>};
+				temp[j]= position
+				j = j + 1;
+				console.log(position);	
+			<% }) %>
+		<% } %>
+		console.log("temp:",temp);
+		function initMap() {
+			map = new google.maps.Map(document.getElementById('map'), {
+				zoom: 16,
+				center: {
+				lat: 23.692544,
+				lng: 120.534734
+				},
+				styles: [{
+					"featureType": "administrative",
+					"elementType": "labels.text.fill",
+					"stylers": [{
+						"color": "#444444"
+					}]
+				},
+				{
+					"featureType": "landscape",
+					"elementType": "all",
+					"stylers": [{
+						"color": "#f2f2f2"
+					}]
+				},
+				{
+					"featureType": "poi",
+					"elementType": "all",
+					"stylers": [{
+						"visibility": "off"
+					}]
+				},
+				{
+					"featureType": "road",
+					"elementType": "all",
+					"stylers": [{
+						"saturation": -100
+					},
+					{
+						"lightness": 45
+					}]
+				},
+				{
+					"featureType": "road.highway",
+					"elementType": "all",
+					"stylers": [{
+						"visibility": "simplified"
+					}]
+				},
+				{
+					"featureType": "road.arterial",
+					"elementType": "labels.icon",
+					"stylers": [{
+						"visibility": "off"
+					}]
+				},
+				{
+					"featureType": "transit",
+					"elementType": "all",
+					"stylers": [{
+						"visibility": "off"
+					}]
+				},
+				{
+					"featureType": "water",
+					"elementType": "all",
+					"stylers": [{
+						"color": "#425a68"
+					},
+					{
+						"visibility": "on"
+					}]
+				}]
+			});
+			var latlngbounds = new google.maps.LatLngBounds();
+			for (var i = 0; i < temp.length; i++) {
+				addPolyline(i);
+			}
+			for (var j = 0; j < temp.length; j++) {
+				latlngbounds.extend(temp[j]);
+			}
+			map.fitBounds(latlngbounds);
+		}
+		
+		function addPolyline(e){
+			polyline = new google.maps.Polyline({
+				path:temp,
+				geodesic: true,
+				strokeColor: "#FF0000",
+				strokeOpacity: 1.0,
+				strokeWeight: 2,
+				icons:[{
+					icon: font_symbol,
+					offset: "0%"
+				},{
+					icon: end_symbol,
+					offset: "100%"
+				}]
+			});
+			polyline.setMap(map);
+			var a = 0;
+			setInterval(function(){
+				a = a + 1;
+				if(a>100){a = 0;}
+				polyline.setOptions({
+					icons:[{
+					icon: symbol,
+					offset: a+"%"
+					}]
+				})
+			},50);
+		}
+		
+		setInterval('window.location.reload()',10000)
+	</script>
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCRILb3vb9mGglZqzHZpa0RQp26NJsCzWI&callback=initMap"async defer></script>
+  </body>
+</html>

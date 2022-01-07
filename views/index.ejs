@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta charset="utf-8">
+		<title><%= title %></title>
+		<link rel="icon" href="../images/yuntech.ico" type="image/x-icon" />
+		<style>
+			html, body {
+				height: 100%;
+				margin: 0;
+				padding: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<div>
+			<a href="/"><h1>Home</a> |
+			<a href="/web/list">List</a> |
+			<a href="/web/add">Add</a> |
+			<a href="/web/map">Track</a>
+		</div>
+		<h1><%= title %></h1>
+		<h2 style="color:red">ESP8266 location tracking by MicroPython.</h2>
+
+		<!-- 錯誤訊息 -->
+		<% if (messages.error) { %>
+		<p style="color:red"><%- messages.error %></p>
+		<% } %>
+		<!-- 正確訊息 -->
+		<% if (messages.success) { %>
+		<p style="color:green"><%- messages.success %></p>
+		<% } %>
+	</body>
+</html>
